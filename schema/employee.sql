@@ -14,6 +14,7 @@ CREATE TABLE employee_role (
 	id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
+    department_id int NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -23,4 +24,7 @@ CREATE TABLE department(
     PRIMARY KEY(id)
 );
 
-SELECT * FROM employee_db;
+SELECT * FROM employee;
+SELECT * FROM employee_role;
+SELECT * FROM department;
+
