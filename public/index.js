@@ -111,18 +111,20 @@ function addRole() {
         console.log(results.length);
 
 
+
+
         inquirer.prompt([
             {
                 name: "departmentChoice",
                 type: "list",
+                message: "What is the department associated with this role?",
                 choices: function() {
                     var choiceArr = [];
-                    for(var i = 0; i <= 2; i++) {
+                    for(var i = 0; i <= results.length; i++) {
                         choiceArr.push(results[i].department_name);
                     }
                     return choiceArr;
-                },
-                message: "What is the department associated with this role?"
+                }
             },
             {
                 name: "title",
@@ -136,15 +138,18 @@ function addRole() {
             }
         ]).then(function(answer) {
             
-            connection.query("INSERT INTO employee_role SET ?", 
-            [
-                {
-                    title: answer.title
-                },
-                {
-                    salary: answer.salary
-                }
-            ]);
+            // connection.query("INSERT INTO employee_role SET ?", 
+            // [
+            //     {
+            //         title: answer.title
+            //     },
+            //     {
+            //         salary: answer.salary
+            //     },
+            //     {
+            //         department_id: 0
+            //     }
+            // ]);
 
         }, function (err) {
             if (err) throw err;
