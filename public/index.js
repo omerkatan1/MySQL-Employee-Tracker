@@ -60,31 +60,31 @@ function runApp() {
 
 function searchEmployee() {
     console.log('test');
-    runApp();
+    promptQuit();
 
 }
 
 function searchEmployee_Department() {
     console.log('test');
-    runApp();
+    promptQuit();
 
 }
 
 function searchEmployee_Role() {
     console.log('test');
-    runApp();
+    promptQuit();
 
 }
 
 function addEmployee() {
     console.log('test');
-    runApp();
+    promptQuit();
 
 }
 
 function removeEmployee() {
     console.log('test');
-    runApp();
+    promptQuit();
 
 }
 
@@ -98,66 +98,67 @@ function addDepartment() {
         
         connection.query('INSERT INTO department SET ?', { department_name: answer.addDepartment }, function(err) {
             if (err) throw err;
-            runApp();
         });
-    });
 
+        console.log("\n Department added to database... \n");
+
+        promptQuit();
+    });
 }
 
 function addRole() {
 
-    connection.query("SELECT * FROM department", function(err, results) {
+    connection.query("SELECT * FROM department", function(err, result) {
         if (err) throw err;
-        console.log(results.length);
-
-
-
+        console.log(result);
 
         inquirer.prompt([
             {
+                name: "roleTitle",
+                type: "input",
+                message: "Enter the title for this role"
+            },
+            {
+                name: "roleSalary",
+                type: "input",
+                message: "Enter the salary for this role"
+            },
+            {
                 name: "departmentChoice",
-                type: "list",
-                message: "What is the department associated with this role?",
+                type: "rawlist",
+                message: "Choose a department associated with this role",
                 choices: function() {
-                    var choiceArr = [];
-                    for(var i = 0; i <= results.length; i++) {
-                        choiceArr.push(results[i].department_name);
-                    }
-                    return choiceArr;
-                }
-            },
-            {
-                name: "title",
-                type: "input",
-                message: "What is the name of the role?"
-            },
-            {
-                name: "salary",
-                type: "input",
-                message: "What is the salary for this role?"
-            }
-        ]).then(function(answer) {
-            
-            // connection.query("INSERT INTO employee_role SET ?", 
-            // [
-            //     {
-            //         title: answer.title
-            //     },
-            //     {
-            //         salary: answer.salary
-            //     },
-            //     {
-            //         department_id: 0
-            //     }
-            // ]);
+                    var arrChoices = [];
 
-        }, function (err) {
-            if (err) throw err;
-            runApp();
-        })
-    
+                    for(var i = 0; i < result.length; i++) {
+                        arrChoices.push(result[i].department_name);
+                    }
+
+                    return arrChoices;
+                }
+            }
+        ])
+
     })
 
-    runApp();
+    promptQuit();
 
+}
+
+function promptQuit() {
+    inquirer.prompt({
+        type: "list",
+        name: "promptQuit",
+        message: "Would you like to quit this application or run again?",
+        choices: ["Run Again", "Quit"]
+    }).then(function(answer) {
+
+        if(answer.promptQuit === "Run Again") {
+            runApp();
+        } else {
+            connection.end();
+        }
+
+
+    });
 }
