@@ -10,21 +10,69 @@ var connection = mysql.createConnection({
     database: "employee_db"
 });
 
-connection.connect(function(err) {
+connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
+    // runs the app
     runApp();
 });
 
+
+// function showAllEmployees() {
+
+//     var allEmployeeInfo = []
+
+//     // gets employee info
+//     connection.query("SELECT * FROM employee", function (err, result) {
+//         if (err) throw err;
+//         var employeeInfo = []
+
+//         for (var i = 0; i < result.length; i++) {
+//             employeeInfo.push(result[i].id);
+//             employeeInfo.push(result[i].first_name);
+//             employeeInfo.push(result[i].last_name);
+            
+//             // gets employee role info
+//             connection.query("SELECT * FROM employee_role WHERE ?", { id: result[i].role_id }, function (err, result) {
+//                 if (err) throw err;
+
+//                 employeeInfo.push(result[0].title);
+//                 employeeInfo.push(result[0].salary);
+
+
+//                 // Gets Department
+//                 connection.query("SELECT * FROM department WHERE ?", { id: result[0].department_id }, function(err, result) {
+//                     if (err) throw err;
+
+//                     employeeInfo.push(result[0].department_name);
+
+//                 });
+//             })
+//             allEmployeeInfo.push(employeeInfo);
+//             employeeInfo = [];
+//         }
+
+//         console.log(allEmployeeInfo);
+//     });
+// }
+
 // runs the application
 function runApp() {
+
+    // Prompts the starting questions
     inquirer.prompt({
         name: 'startQuestions',
         type: 'list',
         message: 'What would you like to do?',
-        choices: ['Search an Employee', 'Search Employee by Department', 'Search Employee by Role', 'Add Employee', 'Remove Employee', 'Add Department', 'Add Role', 'Quit']
-    }).then(function(answer) {
+        choices: ['View All Employees', 'Search an Employee', 'Search Employee by Department', 'Search Employee by Role', 'Add Employee', 'Remove Employee', 'Add Department', 'Add Role', 'Quit']
+    }).then(function (answer) {
+
+
         switch (answer.startQuestions) {
+            case "View All Employees":
+                showAllEmployees();
+                break;
+
             case "Search an Employee":
                 searchEmployee();
                 break;
@@ -32,7 +80,7 @@ function runApp() {
             case "Search Employee by Department":
                 searchEmployee_Department();
                 break;
-            
+
             case "Search Employee by Role":
                 searchEmployee_Role();
                 break;
@@ -59,6 +107,47 @@ function runApp() {
     });
 }
 
+
+function showAllEmployees() {
+
+    var allEmployeeInfo = []
+
+    // gets employee info
+    connection.query("SELECT * FROM employee", function (err, result) {
+        if (err) throw err;
+        var employeeInfo = []
+
+        for (var i = 0; i < result.length; i++) {
+            employeeInfo.push(result[i].id);
+            employeeInfo.push(result[i].first_name);
+            employeeInfo.push(result[i].last_name);
+            
+            // gets employee role info
+            connection.query("SELECT * FROM employee_role WHERE ?", { id: result[i].role_id }, function (err, result) {
+                if (err) throw err;
+
+                employeeInfo.push(result[0].title);
+                employeeInfo.push(result[0].salary);
+
+
+                // Gets Department
+                connection.query("SELECT * FROM department WHERE ?", { id: result[0].department_id }, function(err, result) {
+                    if (err) throw err;
+
+                    employeeInfo.push(result[0].department_name);
+
+                });
+            })
+            allEmployeeInfo.push(employeeInfo);
+            employeeInfo = [];
+        }
+
+        console.log(allEmployeeInfo);
+
+        promptQuit();
+    });
+}
+
 function searchEmployee() {
     console.log('test');
     promptQuit();
@@ -81,8 +170,8 @@ function searchEmployee_Role() {
 
 // adds employee to database
 function addEmployee() {
-    
-    connection.query("SELECT * FROM employee_role", function(err, result) {
+
+    connection.query("SELECT * FROM employee_role", function (err, result) {
         if (err) throw err;
 
         inquirer.prompt([
@@ -100,19 +189,19 @@ function addEmployee() {
                 name: "roleChoice",
                 type: "rawlist",
                 message: "Enter the employee's role",
-                choices: function() {
+                choices: function () {
                     var arrChoices = [];
 
-                    for(var i = 0; i < result.length; i++) {
+                    for (var i = 0; i < result.length; i++) {
                         arrChoices.push(result[i].title);
                     }
 
                     return arrChoices;
                 }
             }
-        ]).then(function(answer) {
+        ]).then(function (answer) {
 
-            connection.query("SELECT * FROM employee_role WHERE ?", { title: answer.roleChoice }, function(err, result) {
+            connection.query("SELECT * FROM employee_role WHERE ?", { title: answer.roleChoice }, function (err, result) {
                 if (err) throw err;
 
                 connection.query("INSERT INTO employee SET ?", {
@@ -143,9 +232,9 @@ function removeEmployee() {
             type: "input",
             message: "What is your Employee's Last Name?"
         }
-    ]).then(function(answer) {
+    ]).then(function (answer) {
 
-        connection.query("DELETE FROM employee WHERE first_name = ? and last_name = ?", [answer.firstName, answer.lastName], function(err) {
+        connection.query("DELETE FROM employee WHERE first_name = ? and last_name = ?", [answer.firstName, answer.lastName], function (err) {
             if (err) throw err;
 
             console.log(`\n ${answer.firstName} ${answer.lastName} has been deleted from the database... \n`)
@@ -165,9 +254,9 @@ function addDepartment() {
         name: "addDepartment",
         message: "What is the name of your department?"
 
-    }).then(function(answer) {
-        
-        connection.query('INSERT INTO department SET ?', { department_name: answer.addDepartment }, function(err) {
+    }).then(function (answer) {
+
+        connection.query('INSERT INTO department SET ?', { department_name: answer.addDepartment }, function (err) {
             if (err) throw err;
         });
 
@@ -181,7 +270,7 @@ function addDepartment() {
 // adds role
 function addRole() {
 
-    connection.query("SELECT * FROM department", function(err, result) {
+    connection.query("SELECT * FROM department", function (err, result) {
         if (err) throw err;
 
         inquirer.prompt([
@@ -199,19 +288,19 @@ function addRole() {
                 name: "departmentChoice",
                 type: "rawlist",
                 message: "Choose a department associated with this role",
-                choices: function() {
+                choices: function () {
                     var arrChoices = [];
 
-                    for(var i = 0; i < result.length; i++) {
+                    for (var i = 0; i < result.length; i++) {
                         arrChoices.push(result[i].department_name);
                     }
 
                     return arrChoices;
                 }
             }
-        ]).then(function(answer) {
+        ]).then(function (answer) {
 
-            connection.query("SELECT * FROM department WHERE ?", { department_name: answer.departmentChoice }, function(err, result) {
+            connection.query("SELECT * FROM department WHERE ?", { department_name: answer.departmentChoice }, function (err, result) {
                 if (err) throw err;
                 console.log(result[0].id);
 
@@ -239,9 +328,9 @@ function promptQuit() {
         name: "promptQuit",
         message: "Would you like to quit this application or run again?",
         choices: ["Run Again", "Quit"]
-    }).then(function(answer) {
+    }).then(function (answer) {
 
-        if(answer.promptQuit === "Run Again") {
+        if (answer.promptQuit === "Run Again") {
             runApp();
         } else {
             connection.end();
