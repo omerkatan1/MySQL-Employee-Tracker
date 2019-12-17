@@ -110,42 +110,60 @@ function runApp() {
 
 function showAllEmployees() {
 
-    var allEmployeeInfo = []
 
-    // gets employee info
-    connection.query("SELECT * FROM employee", function (err, result) {
-        if (err) throw err;
-        var employeeInfo = []
+    const query = "SELECT employee.id, employee.first_name, employee.last_name, employee_role.title, employee_role.salary FROM employee INNER JOIN employee_role"
 
-        for (var i = 0; i < result.length; i++) {
-            employeeInfo.push(result[i].id);
-            employeeInfo.push(result[i].first_name);
-            employeeInfo.push(result[i].last_name);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // var allEmployeeInfo = []
+
+    // // gets employee info
+    // connection.query("SELECT * FROM employee", function (err, result) {
+    //     if (err) throw err;
+    //     var employeeInfo = []
+
+    //     for (var i = 0; i < result.length; i++) {
+    //         employeeInfo.push(result[i].id);
+    //         employeeInfo.push(result[i].first_name);
+    //         employeeInfo.push(result[i].last_name);
             
-            // gets employee role info
-            connection.query("SELECT * FROM employee_role WHERE ?", { id: result[i].role_id }, function (err, result) {
-                if (err) throw err;
+    //         // gets employee role info
+    //         connection.query("SELECT * FROM employee_role WHERE id = ?", [result[i].role_id], function (err, roleResult) {
+    //             if (err) throw err;
 
-                employeeInfo.push(result[0].title);
-                employeeInfo.push(result[0].salary);
+    //             console.log(roleResult);
+    //             // employeeInfo.push(result[i].title);
+    //             // employeeInfo.push(result[i].salary);
+    //             employeeInfo.push(roleResult.title);
 
 
-                // Gets Department
-                connection.query("SELECT * FROM department WHERE ?", { id: result[0].department_id }, function(err, result) {
-                    if (err) throw err;
+    //             // Gets Department
+    //             connection.query("SELECT * FROM department WHERE ?", { id: result[0].department_id }, function(err, result) {
+    //                 if (err) throw err;
 
-                    employeeInfo.push(result[0].department_name);
+    //                 // employeeInfo.push(result[0].department_name);
 
-                });
-            })
-            allEmployeeInfo.push(employeeInfo);
-            employeeInfo = [];
-        }
+    //             });
+    //         })
+    //         allEmployeeInfo.push(employeeInfo);
+    //         employeeInfo = [];
+    //     }
 
-        console.log(allEmployeeInfo);
+    //     console.table(['id', 'First Name', 'Last Name', 'Role'], allEmployeeInfo);
 
         promptQuit();
-    });
+    // });
 }
 
 function searchEmployee() {
