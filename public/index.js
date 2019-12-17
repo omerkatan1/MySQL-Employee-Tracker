@@ -70,12 +70,15 @@ function searchEmployee_Department() {
 
 }
 
+// searches employee by role
 function searchEmployee_Role() {
     console.log('test');
     promptQuit();
 
 }
 
+
+// adds employee to database
 function addEmployee() {
     
     connection.query("SELECT * FROM employee_role", function(err, result) {
@@ -108,12 +111,24 @@ function addEmployee() {
             }
         ]).then(function(answer) {
 
-            connection.query()
+            connection.query("SELECT * FROM employee_role WHERE ?", { title: answer.roleChoice }, function(err, result) {
+                if (err) throw err;
 
+                connection.query("INSERT INTO employee SET ?", {
+                    first_name: answer.firstName,
+                    last_name: answer.lastName,
+                    role_id: result[0].id
+                });
+
+                console.log("\n Employee added to database... \n");
+            })
+
+            promptQuit();
         });
     })
 }
 
+// removes employee from database
 function removeEmployee() {
     console.log('test');
     promptQuit();
