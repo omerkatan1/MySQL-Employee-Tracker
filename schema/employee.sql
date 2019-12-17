@@ -13,18 +13,16 @@ CREATE TABLE employee (
 CREATE TABLE employee_role (
 	id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
-    salary DECIMAL NOT NULL,
-    department_id int NOT NULL,
+    salary DECIMAL(100000) NOT NULL,
+    department_id int,
     PRIMARY KEY(id)
 );
 
-CREATE TABLE department(
+CREATE TABLE department (
 	id INT NOT NULL AUTO_INCREMENT,
     department_name VARCHAR(30) NOT NULL,
     PRIMARY KEY(id)
 );
 
-SELECT * FROM employee;
-SELECT * FROM employee_role;
-SELECT * FROM department;
+SELECT DEPARTMENT_NAME FROM department;
 

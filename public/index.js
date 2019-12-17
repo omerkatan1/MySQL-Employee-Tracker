@@ -18,7 +18,7 @@ connection.connect(function(err) {
 function runApp() {
     inquirer.prompt({
         name: 'startQuestions',
-        type: 'rawlist',
+        type: 'list',
         message: 'What would you like to do?',
         choices: ['Search an Employee', 'Search Employee by Department', 'Search Employee by Role', 'Add Employee', 'Remove Employee', 'Add Department', 'Add Role', 'quit']
     }).then(function(answer) {
@@ -104,7 +104,55 @@ function addDepartment() {
 }
 
 function addRole() {
-    console.log('test');
+
+    connection.query("SELECT * FROM department", function(err, results) {
+        if (err) throw err;
+        console.log(results.length);
+
+
+        inquirer.prompt([
+            {
+                name: "departmentChoice",
+                type: "list",
+                choices: function() {
+                    var choiceArr = [];
+                    for(var i = 0; i <= 2; i++) {
+                        choiceArr.push(results[i].department_name);
+                    }
+                    return choiceArr;
+                },
+                message: "What is the department associated with this role?"
+            },
+            {
+                name: "title",
+                type: "input",
+                message: "What is the name of the role?"
+            },
+            {
+                name: "salary",
+                type: "input",
+                message: "What is the salary for this role?"
+            }
+        ]).then(function(answer) {
+            var salaryInt = parseInt(answer.salary);
+            
+            connection.query("INSERT INTO employee_role SET ?", 
+            [
+                {
+                    title: answer.title
+                },
+                {
+                    salary: salaryInt
+                }
+            ]);
+
+        }, function (err) {
+            if (err) throw err;
+            runApp();
+        })
+    
+    })
+
     runApp();
 
 }
