@@ -13,7 +13,7 @@ CREATE TABLE employee (
 CREATE TABLE employee_role (
 	id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
-    salary DECIMAL NOT NULL,
+    salary DECIMAL(10, 0) NOT NULL,
     department_id int NOT NULL,
     PRIMARY KEY(id)
 );
@@ -23,3 +23,5 @@ CREATE TABLE department (
     department_name VARCHAR(30) NOT NULL,
     PRIMARY KEY(id)
 );
+
+SELECT Math FROM department;

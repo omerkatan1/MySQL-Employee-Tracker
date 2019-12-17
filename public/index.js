@@ -77,8 +77,6 @@ function searchEmployee_Role() {
 }
 
 function addEmployee() {
-    console.log('test');
-    promptQuit();
 
 }
 
@@ -110,7 +108,6 @@ function addRole() {
 
     connection.query("SELECT * FROM department", function(err, result) {
         if (err) throw err;
-        console.log(result);
 
         inquirer.prompt([
             {
@@ -138,12 +135,24 @@ function addRole() {
                 }
             }
         ]).then(function(answer) {
-            
+
+            connection.query("SELECT * FROM department WHERE ?", { department_name: answer.departmentChoice }, function(err, result) {
+                if (err) throw err;
+                console.log(result[0].id);
+
+                connection.query("INSERT INTO employee_role SET ?", {
+                    title: answer.roleTitle,
+                    salary: parseInt(answer.roleSalary),
+                    department_id: parseInt(result[0].id)
+                });
+
+                console.log("\n Role has been added to database... \n");
+            })
+
+            promptQuit();
         });
 
     })
-
-    promptQuit();
 
 }
 
