@@ -143,7 +143,17 @@ function removeEmployee() {
             type: "input",
             message: "What is your Employee's Last Name?"
         }
-    ])
+    ]).then(function(answer) {
+
+        connection.query("DELETE FROM employee WHERE first_name = ? and last_name = ?", [answer.firstName, answer.lastName], function(err) {
+            if (err) throw err;
+
+            console.log(`\n ${answer.firstName} ${answer.lastName} has been deleted from the database... \n`)
+            promptQuit();
+        })
+
+
+    });
 
 }
 
