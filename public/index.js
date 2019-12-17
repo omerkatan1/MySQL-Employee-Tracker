@@ -21,7 +21,7 @@ function runApp() {
         name: 'startQuestions',
         type: 'list',
         message: 'What would you like to do?',
-        choices: ['Search an Employee', 'Search Employee by Department', 'Search Employee by Role', 'Add Employee', 'Remove Employee', 'Add Department', 'Add Role', 'quit']
+        choices: ['Search an Employee', 'Search Employee by Department', 'Search Employee by Role', 'Add Employee', 'Remove Employee', 'Add Department', 'Add Role', 'Quit']
     }).then(function(answer) {
         switch (answer.startQuestions) {
             case "Search an Employee":
@@ -51,7 +51,7 @@ function runApp() {
             case "Add Role":
                 addRole();
                 break;
-            case "quit":
+            case "Quit":
                 connection.end();
                 break;
         }
@@ -135,6 +135,8 @@ function removeEmployee() {
 
 }
 
+
+// adds department
 function addDepartment() {
     inquirer.prompt({
         type: "input",
@@ -153,6 +155,8 @@ function addDepartment() {
     });
 }
 
+
+// adds role
 function addRole() {
 
     connection.query("SELECT * FROM department", function(err, result) {
@@ -205,6 +209,8 @@ function addRole() {
 
 }
 
+
+// asks user if they want to quit or keep using the application
 function promptQuit() {
     inquirer.prompt({
         type: "list",
