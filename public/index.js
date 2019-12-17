@@ -77,7 +77,41 @@ function searchEmployee_Role() {
 }
 
 function addEmployee() {
+    
+    connection.query("SELECT * FROM employee_role", function(err, result) {
+        if (err) throw err;
 
+        inquirer.prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "Enter the employee's First Name:"
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "Enter the employee's Last Name:"
+            },
+            {
+                name: "roleChoice",
+                type: "rawlist",
+                message: "Enter the employee's role",
+                choices: function() {
+                    var arrChoices = [];
+
+                    for(var i = 0; i < result.length; i++) {
+                        arrChoices.push(result[i].title);
+                    }
+
+                    return arrChoices;
+                }
+            }
+        ]).then(function(answer) {
+
+            connection.query()
+
+        });
+    })
 }
 
 function removeEmployee() {
