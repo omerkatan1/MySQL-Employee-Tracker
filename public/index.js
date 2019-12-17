@@ -137,7 +137,9 @@ function addRole() {
                     return arrChoices;
                 }
             }
-        ])
+        ]).then(function(answer) {
+            
+        });
 
     })
 
