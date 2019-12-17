@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -134,7 +135,6 @@ function addRole() {
                 message: "What is the salary for this role?"
             }
         ]).then(function(answer) {
-            var salaryInt = parseInt(answer.salary);
             
             connection.query("INSERT INTO employee_role SET ?", 
             [
@@ -142,7 +142,7 @@ function addRole() {
                     title: answer.title
                 },
                 {
-                    salary: salaryInt
+                    salary: answer.salary
                 }
             ]);
 
