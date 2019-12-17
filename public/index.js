@@ -16,6 +16,7 @@ connection.connect(function(err) {
     runApp();
 });
 
+// runs the application
 function runApp() {
     inquirer.prompt({
         name: 'startQuestions',
@@ -130,8 +131,19 @@ function addEmployee() {
 
 // removes employee from database
 function removeEmployee() {
-    console.log('test');
-    promptQuit();
+
+    inquirer.prompt([
+        {
+            name: "firstName",
+            type: "input",
+            message: "What is your Employee's First Name?"
+        },
+        {
+            name: "lastName",
+            type: "input",
+            message: "What is your Employee's Last Name?"
+        }
+    ])
 
 }
 
