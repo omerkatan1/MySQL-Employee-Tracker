@@ -93,24 +93,67 @@ function showAllEmployees() {
             employeeArray.push(result[i].salary);
             employeeArray.push(result[i].department_name);
 
-            console.log(employeeArray);
+            // console.log(employeeArray);
 
 
             allEmployeeArray.push(employeeArray);
 
         }
 
-        console.log(allEmployeeArray);
+        // console.log(allEmployeeArray);
+
+        console.log("\n\n\n");
+        console.table(["ID", "First Name", "Last Name", "Role", "Salary", "Department"], allEmployeeArray);
+        console.log("\n\n\n");
+
+        promptQuit();
+
+
     });
-
-
-
 
 }
 
 function searchEmployee() {
-    console.log('test');
-    promptQuit();
+
+    var query = "SELECT employee.id, first_name, last_name, title, salary, department_name FROM employee JOIN employee_role ON (employee.role_id = employee_role.id) JOIN department ON (department.id = employee_role.department_id)";
+
+    inquirer.prompt([
+        {
+            name: "firstName",
+            type: "input",
+            message: "What is your employee's First Name?"
+        },
+        {
+            name: "lastName",
+            type: "input",
+            message: "What is your employee's Last Name?"
+        }
+    ]).then(function(answer) {
+
+        var searchEmployeeArray = [];
+
+        connection.query(query, function(err, result) {
+            if (err) throw err;
+
+            // search database for specific searched employee
+            for(var i = 0; i < result.length; i++) {
+                if (result[i].first_name === answer.firstName && result[i].last_name === answer.lastName) {
+                    searchEmployeeArray.push(result[i].id)
+                    searchEmployeeArray.push(result[i].first_name)
+                    searchEmployeeArray.push(result[i].last_name)
+                    searchEmployeeArray.push(result[i].title)
+                    searchEmployeeArray.push(result[i].salary)
+                    searchEmployeeArray.push(result[i].department_name);
+
+                }
+            }
+
+            
+
+
+
+        });
+    });
 
 }
 
