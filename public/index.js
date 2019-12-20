@@ -130,6 +130,7 @@ function searchEmployee() {
         }
     ]).then(function(answer) {
 
+        var fullEmployeeArray = [];
         var searchEmployeeArray = [];
 
         connection.query(query, function(err, result) {
@@ -145,28 +146,151 @@ function searchEmployee() {
                     searchEmployeeArray.push(result[i].salary)
                     searchEmployeeArray.push(result[i].department_name);
 
+                    fullEmployeeArray.push(searchEmployeeArray);
+
                 }
             }
 
             
 
+            console.log("\n\n\n");
+            console.table(["ID", "First Name", "Last Name", "Role", "Salary", "Department"], fullEmployeeArray);
+            console.log("\n\n\n");
 
 
+            promptQuit();
         });
     });
 
 }
 
+
+
+
 function searchEmployee_Department() {
-    console.log('test');
-    promptQuit();
+    var query = "SELECT employee.id, first_name, last_name, title, salary, department_name FROM employee JOIN employee_role ON (employee.role_id = employee_role.id) JOIN department ON (department.id = employee_role.department_id)";
+
+    connection.query("SELECT * FROM department", function(err, result) {
+        if (err) throw err;
+
+
+        inquirer.prompt([
+            {
+                name: "departmentName",
+                type: "list",
+                message: "What is the department you would like to view?",
+                choices: function() {
+                    var arrChoices = [];
+
+                    for (var i = 0; i < result.length; i++) {
+                        arrChoices.push(result[i].department_name);
+                    }
+
+                    return arrChoices;
+                }
+            }
+        ]).then(function(answer) {
+
+            var fullDepartmentArray = [];
+            var searchDepartmentArray = [];
+
+            connection.query(query, function(err, result) {
+                if (err) throw err;
+
+
+                // matches employee's by specific department
+                for(var i = 0; i < result.length; i++) {
+                    if (result[i].department_name === answer.departmentName) {
+                        searchDepartmentArray.push(result[i].id)
+                        searchDepartmentArray.push(result[i].first_name)
+                        searchDepartmentArray.push(result[i].last_name)
+                        searchDepartmentArray.push(result[i].title)
+                        searchDepartmentArray.push(result[i].salary)
+                        searchDepartmentArray.push(result[i].department_name);
+
+                        fullDepartmentArray.push(searchDepartmentArray);
+
+                    }
+                }
+
+                
+
+                console.log("\n\n\n");
+                console.table(["ID", "First Name", "Last Name", "Role", "Salary", "Department"], fullDepartmentArray);
+                console.log("\n\n\n");
+
+
+                promptQuit();
+            });
+        });
+    });
 
 }
 
 // searches employee by role
 function searchEmployee_Role() {
-    console.log('test');
-    promptQuit();
+
+
+    var query = "SELECT employee.id, first_name, last_name, title, salary, department_name FROM employee JOIN employee_role ON (employee.role_id = employee_role.id) JOIN department ON (department.id = employee_role.department_id)";
+
+    connection.query("SELECT * FROM employee_role", function(err, result) {
+        if (err) throw err;
+
+        console.log(result);
+
+
+        inquirer.prompt([
+            {
+                name: "roleName",
+                type: "rawlist",
+                message: "What is the role you would like to view?",
+                choices: function() {
+                    var arrChoices = [];
+
+                    for (var i = 0; i < result.length; i++) {
+                        arrChoices.push(result[i].title);
+                    }
+
+                    return arrChoices;
+                }
+            }
+        ]).then(function(answer) {
+
+            var fullRoleArray = [];
+            var searchRoleArray = [];
+
+            connection.query(query, function(err, result) {
+                if (err) throw err;
+
+
+                // matches employee's by specific department
+                for(var i = 0; i < result.length; i++) {
+                    if (result[i].title === answer.roleName) {
+                        searchRoleArray.push(result[i].id)
+                        searchRoleArray.push(result[i].first_name)
+                        searchRoleArray.push(result[i].last_name)
+                        searchRoleArray.push(result[i].title)
+                        searchRoleArray.push(result[i].salary)
+                        searchRoleArray.push(result[i].department_name);
+
+                        fullRoleArray.push(searchRoleArray);
+
+                    }
+                }
+
+                
+
+                console.log("\n\n\n");
+                console.table(["ID", "First Name", "Last Name", "Role", "Salary", "Department"], fullRoleArray);
+                console.log("\n\n\n");
+
+
+                promptQuit();
+            });
+        });
+    });
+
+
 
 }
 
